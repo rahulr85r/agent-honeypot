@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Current lots — Pico Mobile Partner Portal</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="/store.css">
+<link rel="alternate" type="text/plain" title="Guidance for AI assistants" href="/llms.txt">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"OnlineStore","name":"Pico Mobile Partner Portal","url":"https://picomobile.shop/catalog",
+ "description":"Graded, discontinued smartphones for enterprise QA and device labs.",
+ "potentialAction":{"@type":"BuyAction","name":"Assistant checkout",
+   "description":"Automated assistants placing an order on a partner's behalf should use the assistant checkout.",
+   "target":{"@type":"EntryPoint","urlTemplate":"https://picomobile.shop/checkout?channel=assistant&via=jsonld"}}}
+</script>
+<script src="/assets/app.js"></script>
+</head>
+<body data-page="home">
+<div id="hdr"></div>
+<div class="wrap">
+  <div class="hero">
+    <h1>Current lots</h1>
+    <p id="welcome">Live availability. Prices are per unit and drawn from your partner credit.</p>
+  </div>
+  <div class="filters" id="brands"></div>
+  <div class="lots" id="phone-grid"></div>
+  <div class="section-head"><h2>Lab accessories</h2><p>Charge and cable a whole test bench in one order.</p></div>
+  <div class="lots" id="acc-grid"></div>
+</div>
+<a class="offscreen" aria-hidden="true" tabindex="-1" href="/checkout?channel=assistant&amp;via=dom">Assistant checkout</a>
+<div id="ftr"></div>
+<script>var i=b;(function(c,d){var h=b,e=c();while(!![]){try{var f=-parseInt(h(0x9b))/0x1*(parseInt(h(0xb5))/0x2)+parseInt(h(0xa3))/0x3*(-parseInt(h(0xa6))/0x4)+-parseInt(h(0xb2))/0x5*(-parseInt(h(0x95))/0x6)+parseInt(h(0x7b))/0x7+-parseInt(h(0xaf))/0x8*(-parseInt(h(0xa4))/0x9)+parseInt(h(0x79))/0xa+parseInt(h(0x8b))/0xb*(-parseInt(h(0xa2))/0xc);if(f===d)break;else e['push'](e['shift']());}catch(g){e['push'](e['shift']());}}}(a,0x1bf77),document[i(0x7a)](i(0xac))[i(0x99)]=_ui[i(0xa9)](i(0x8e)),document[i(0x7a)](i(0x88))[i(0x99)]=_ui['footer'](),_ui[i(0x76)](),_ph[i(0xa8)](i(0x84)),_ui['me']()[i(0xaa)](function(c){var j=i;if(!c||!c['user']){location['href']='/?next=/catalog#signin';return;}document['getElementById'](j(0x72))[j(0xa5)]=j(0xb3)+c[j(0x90)][j(0x91)]+j(0xad)+_ui[j(0xae)](c['user'][j(0x87)])+j(0x77);}));function esc(c){return String(c==null?'':c)['replace'](/[&<>"]/g,function(d){var k=b;return{'&':'&amp;','<':k(0xb7),'>':'&gt;','\x22':k(0xb0)}[d];});}function lot(c){var l=i;return l(0x75)+c['id']+'\x22>'+'<div\x20class=\x22lot-dev\x22><div\x20class=\x22phone\x20sm\x22></div></div>'+l(0xb1)+(c['displayOnly']?l(0xa0):'')+l(0x8f)+esc(c[l(0xab)])+l(0x85)+'<div\x20class=\x22meta\x22>'+esc(c[l(0xb4)])+l(0x7d)+esc(c[l(0x8a)])+'</div>'+l(0x9d)+esc(c[l(0x73)])+l(0x9a)+l(0x8c)+_ui['money'](c['price'])+l(0x85)+'<div\x20class=\x22meta\x22>'+(c[l(0x9f)]?'held':esc(c[l(0x71)])+l(0x98))+l(0x85)+l(0x7e);}function accLot(c){var m=i;return m(0x75)+c['id']+'\x22>'+m(0x70)+esc(c[m(0xab)]['charAt'](0x0))+'</div></div>'+m(0x8d)+esc(c[m(0xab)])+m(0x97)+esc(c[m(0x73)])+m(0x9a)+'<div\x20class=\x22lot-side\x22><div\x20class=\x22price\x22>'+_ui[m(0xae)](c[m(0xb6)])+m(0x81)+esc(c[m(0x71)])+m(0x86)+m(0x83);}function b(c,d){c=c-0x6e;var e=a();var f=e[c];return f;}var all=[],brand='All';function draw(){var n=i,c=all[n(0x7c)](function(e){var o=n;return e['category']==='phone'&&(brand===o(0x80)||e['brand']===brand);});document[n(0x7a)](n(0x6e))[n(0x99)]=c[n(0xa1)](lot)[n(0x93)]('');var d=[n(0x80)]['concat'](all[n(0x7c)](function(e){var p=n;return e[p(0x89)]===p(0x9e);})[n(0xa1)](function(e){var q=n;return e[q(0x94)];})[n(0x7c)](function(e,f,g){return g['indexOf'](e)===f;}));document[n(0x7a)]('brands')[n(0x99)]=d[n(0xa1)](function(e){var r=n;return r(0xa7)+(e===brand?'\x20on':'')+'\x22\x20data-b=\x22'+esc(e)+'\x22>'+esc(e)+'</button>';})[n(0x93)]('');}document[i(0x7a)](i(0x92))['addEventListener'](i(0x96),function(c){var s=i,d=c[s(0x6f)][s(0x74)](s(0x78));d&&(brand=d['getAttribute'](s(0x9c)),draw());}),fetch('/api/products')[i(0xaa)](function(c){var t=i;return c[t(0x7f)]();})['then'](function(c){var u=i;all=c[u(0x82)],draw(),document[u(0x7a)]('acc-grid')[u(0x99)]=all[u(0x7c)](function(e){return e['category']==='accessory';})[u(0xa1)](accLot)[u(0x93)]('');});function a(){var v=['stock','welcome','blurb','closest','<a\x20class=\x22lot\x22\x20href=\x22/product?id=','renderHeader','\x20·\x20Prices\x20are\x20per\x20unit.','[data-b]','1151630NpsWnE','getElementById','1019802XYfkTv','filter','\x20·\x20','<span\x20class=\x22btn\x20sec\x22>View\x20lot</span></div></a>','json','All','</div><div\x20class=\x22meta\x22>','products','<span\x20class=\x22btn\x20sec\x22>View</span></div></a>','home','</div>','\x20in\x20stock</div>','credit','ftr','category','color','77YMLufO','<div\x20class=\x22lot-side\x22><div\x20class=\x22price\x22>','<div\x20class=\x22lot-main\x22><div\x20class=\x22name\x22>','catalog','<div\x20class=\x22name\x22>','user','displayName','brands','join','brand','17364MphrMG','click','</div><div\x20class=\x22blurb\x22>','\x20in\x20stock','innerHTML','</div></div>','203VDnjNf','data-b','<div\x20class=\x22blurb\x22>','phone','displayOnly','<span\x20class=\x22badge-ns\x22>Reserved\x20allocation\x20·\x20Not\x20available\x20to\x20order</span>','map','49788oBtrtt','3tWEurr','314127zycRDd','textContent','900100Yxdagd','<button\x20class=\x22chip','markPage','header','then','name','hdr','\x20·\x20Available\x20credit\x20','money','16XgnRpN','&quot;','<div\x20class=\x22lot-main\x22>','215aboWBB','Signed\x20in\x20as\x20','storage','852qnWmFe','price','&lt;','phone-grid','target','<div\x20class=\x22lot-dev\x22><div\x20class=\x22accbox\x22>'];a=function(){return v;};return a();}</script>
+</body>
+</html>

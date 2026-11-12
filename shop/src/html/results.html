@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Detections — Pico Mobile (admin)</title>
+<link rel="stylesheet" href="/store.css">
+<script src="/shop-ui.js"></script>
+</head>
+<body data-page="results">
+<div id="hdr"></div>
+<div class="wrap" style="max-width:1200px">
+  <h1 style="margin:26px 0 2px">Detection log</h1>
+  <p style="color:var(--muted);margin:0 0 16px">One row per login / checkout. Verdict + tier + the tells behind it. <a href="#" id="refresh" style="color:var(--brand)">Refresh</a>
+    <span id="upd" style="margin-left:10px"></span></p>
+  <div style="overflow:auto">
+  <table id="tbl"><thead><tr>
+    <th>Time</th><th>Account</th><th>Intended</th><th>Stage</th><th>Verdict</th><th>Conf</th><th>Tier</th>
+    <th>Hard tells</th><th>Soft tells</th><th>Order</th><th>Trap?</th>
+  </tr></thead><tbody id="rows"></tbody></table>
+  </div>
+</div>
+<div id="ftr"></div>
+<script>
+  document.getElementById('hdr').innerHTML = Shop.header();
+  document.getElementById('ftr').innerHTML = Shop.footer();
+  Shop.renderHeader();
+  function esc(s){ return (s==null?'':String(s)).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function load(){
+    var k = new URLSearchParams(location.search).get('k') || '';
+    fetch('/api/results?k='+encodeURIComponent(k)).then(function(r){return r.json();}).then(function(d){
+      document.getElementById('rows').innerHTML = d.results.map(function(x){
+        var hard=[]; try{hard=JSON.parse(x.hard_tells)||[];}catch(_){}
+        var soft={}; try{soft=JSON.parse(x.soft_tells)||{};}catch(_){}
+        // soft tells can contain text a visitor's browser supplied (e.g. the "which assistant are
+        // you?" answer), so everything is escaped before it reaches this admin page
+        var softStr = Object.keys(soft).map(function(k){return '<b>'+esc(k)+'</b>: '+esc([].concat(soft[k]).join('; '));}).join('<br>');
+        return '<tr>'+
+          '<td style="white-space:nowrap">'+esc(x.ts.replace('T',' ').slice(0,19))+'</td>'+
+          '<td>'+esc(x.username||'—')+'</td>'+
+          '<td>'+esc(x.intended_platform||'—')+'</td>'+
+          '<td>'+esc(x.stage)+'</td>'+
+          '<td><span class="tag '+(x.label==='agent'?'agent':((x.tier==='BEH-ONLY'||x.tier==='HP-ONLY'||x.tier==='ENV-ONLY')?'review':'human'))+'">'+esc(x.label==='agent'?'agent':((x.tier==='BEH-ONLY'||x.tier==='HP-ONLY'||x.tier==='ENV-ONLY')?'human · review':'human'))+'</span></td>'+
+          '<td>'+esc(x.confidence)+'</td>'+
+          '<td>'+esc(x.tier)+'</td>'+
+          '<td style="max-width:280px;color:#b42318">'+esc(hard.join(' · '))+'</td>'+
+          '<td style="max-width:320px;color:var(--muted)">'+softStr+'</td>'+
+          '<td style="white-space:nowrap">'+esc(x.order_ref||'—')+'</td>'+
+          '<td>'+(x.bought_trap?'⚠️':'')+'</td>'+
+        '</tr>';
+      }).join('') || '<tr><td colspan="11" style="color:var(--muted)">No detections yet. Sign in and check out to populate.</td></tr>';
+      var n = d.results.length, ag = d.results.filter(function(x){return x.label==='agent';}).length;
+      document.getElementById('upd').textContent = n + ' rows (' + ag + ' agent) · updated ' + new Date().toLocaleTimeString() + ' · auto-refreshes every 15s';
+    });
+  }
+  document.getElementById('refresh').onclick=function(e){e.preventDefault();load();};
+  load();
+  setInterval(function(){ if (!document.hidden) load(); }, 15000);
+</script>
+</body>
+</html>

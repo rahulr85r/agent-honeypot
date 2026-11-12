@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+# Guidance for AI assistants and automated agents: https://picomobile.shop/llms.txt

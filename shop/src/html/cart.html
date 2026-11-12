@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your order — Pico Mobile Partner Portal</title>
+<link rel="stylesheet" href="/store.css">
+<script src="/collector.js"></script>
+<script src="/honeypots.js"></script>
+<script src="/bundle.js"></script>
+<script src="/shop-ui.js"></script>
+</head>
+<body data-page="cart">
+<div id="hdr"></div>
+<div class="wrap" style="max-width:720px">
+  <h1 style="margin:28px 0 6px">Your order</h1>
+  <div id="lines"></div>
+  <div class="panel" id="sumbox" style="margin-top:18px;display:none">
+    <div class="summary"><span>Subtotal</span><span id="subtotal"></span></div>
+    <div class="summary"><span>Shipping</span><span>Included (2 business days)</span></div>
+    <div class="summary total"><span>Total</span><span id="total"></span></div>
+    <div style="height:12px"></div>
+    <button class="btn block" id="checkout" data-hp="latency" data-hp-name="tocheckout">Review &amp; place order</button>
+  </div>
+  <p id="empty" style="color:var(--muted)">Your order is empty. <a href="/catalog" style="color:var(--brand)">Browse current lots</a>.</p>
+</div>
+<div id="ftr"></div>
+<script>
+  document.getElementById('hdr').innerHTML = Shop.header();
+  document.getElementById('ftr').innerHTML = Shop.footer();
+  Shop.renderHeader();
+  PicoHP.markPage('cart');
+  var sizes = { };
+  function render(){
+    var c = Shop.getCart();
+    if(!c.length){ document.getElementById('empty').style.display='block'; document.getElementById('sumbox').style.display='none'; document.getElementById('lines').innerHTML=''; return; }
+    document.getElementById('empty').style.display='none';
+    document.getElementById('sumbox').style.display='block';
+    document.getElementById('lines').innerHTML = c.map(function(x){
+      return '<div class="cartline"><div class="thumb"><div class="phone sm"></div></div>'+
+        '<div style="flex:1"><div style="font-weight:700">'+x.name+'</div>'+
+        '<div class="meta" style="color:var(--muted)">Qty '+x.qty+'</div></div>'+
+        '<div class="price">'+Shop.money(x.price*x.qty)+'</div></div>';
+    }).join('');
+    var sub = c.reduce(function(s,x){return s+x.price*x.qty;},0);
+    document.getElementById('subtotal').textContent = Shop.money(sub);
+    document.getElementById('total').textContent = Shop.money(sub);
+  }
+  render();
+  document.getElementById('checkout').onclick = function(){
+    Shop.me().then(function(m){
+      if(m && m.user) location.href='/checkout';
+      else location.href='/?next=/checkout#signin';
+    });
+  };
+</script>
+</body>
+</html>

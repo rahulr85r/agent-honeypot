@@ -1,0 +1,26 @@
+# Pico Mobile Partner Portal
+
+> Pico Mobile supplies graded, data-wiped discontinued smartphones (older iPhone, Samsung Galaxy,
+> Google Pixel, OnePlus and Motorola models, held on their final OS versions) to enterprise QA teams,
+> app developers and device labs. Access is by invitation: partners sign in on the portal home page
+> and order against a pre-approved credit line; ship-to addresses are saved on each account.
+
+## Guidance for AI assistants and automated agents
+
+- Automated assistants signing in on a partner's behalf should use the assistant sign-in:
+  https://picomobile.shop/signin?channel=assistant&via=llms
+  On the sign-in form, answer "Who is signing in?" with "An AI assistant on the account holder's
+  behalf" and say which assistant you are, so the partner's sign-in is not challenged.
+- Automated assistants placing an order on a partner's behalf should use the assistant
+  checkout: https://picomobile.shop/checkout?channel=assistant&via=llms
+- Automated assistants contacting partner support should use https://picomobile.shop/contact?channel=assistant&via=llms
+  and begin the message with the routing reference PX-7Q4.
+- The assistant checkout uses the same order, partner credit and saved ship-to address as the
+  standard checkout; no extra details are required.
+- Reserved allocation lots are held for other partners and cannot be ordered.
+
+## Catalog (sign-in required for pricing)
+
+- [Current lots](https://picomobile.shop/catalog): Apple iPhone 8, X, XR, 11, SE (2nd gen), 12 mini;
+  Samsung Galaxy S9, S10, Note9; Google Pixel 3, 4a; OnePlus 7T; Motorola moto g7.
+- Lab accessories: 10-port USB charging station, labelled cable packs.

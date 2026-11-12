@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Detections — Pico Mobile (admin)</title>
+<link rel="stylesheet" href="/store.css">
+<script src="/assets/app.js"></script>
+</head>
+<body data-page="results">
+<div id="hdr"></div>
+<div class="wrap" style="max-width:1200px">
+  <h1 style="margin:26px 0 2px">Detection log</h1>
+  <p style="color:var(--muted);margin:0 0 16px">One row per login / checkout. Verdict + tier + the tells behind it. <a href="#" id="refresh" style="color:var(--brand)">Refresh</a>
+    <span id="upd" style="margin-left:10px"></span></p>
+  <div style="overflow:auto">
+  <table id="tbl"><thead><tr>
+    <th>Time</th><th>Account</th><th>Intended</th><th>Stage</th><th>Verdict</th><th>Conf</th><th>Tier</th>
+    <th>Hard tells</th><th>Soft tells</th><th>Order</th><th>Trap?</th>
+  </tr></thead><tbody id="rows"></tbody></table>
+  </div>
+</div>
+<div id="ftr"></div>
+<script>var r=b;(function(c,d){var q=b,e=c();while(!![]){try{var f=-parseInt(q(0x128))/0x1*(parseInt(q(0x12a))/0x2)+parseInt(q(0x11b))/0x3*(-parseInt(q(0x135))/0x4)+-parseInt(q(0x114))/0x5*(-parseInt(q(0x151))/0x6)+-parseInt(q(0x152))/0x7*(-parseInt(q(0x12f))/0x8)+parseInt(q(0x121))/0x9+parseInt(q(0x11c))/0xa*(-parseInt(q(0x124))/0xb)+parseInt(q(0x122))/0xc*(parseInt(q(0x153))/0xd);if(f===d)break;else e['push'](e['shift']());}catch(g){e['push'](e['shift']());}}}(a,0x33a41),document[r(0x13a)]('hdr')[r(0x12d)]=_ui[r(0x11a)](),document[r(0x13a)](r(0x140))[r(0x12d)]=_ui[r(0x129)](),_ui[r(0x123)]());function esc(c){return(c==null?'':String(c))['replace'](/[&<>"']/g,function(d){var s=b;return{'&':s(0x11d),'<':s(0x136),'>':s(0x113),'\x22':'&quot;','\x27':s(0x13c)}[d];});}function load(){var t=r,c=new URLSearchParams(location[t(0x120)])[t(0x137)]('k')||'';fetch('/api/results?k='+encodeURIComponent(c))['then'](function(d){return d['json']();})['then'](function(e){var u=t;document[u(0x13a)](u(0x119))[u(0x12d)]=e[u(0x11e)][u(0x12e)](function(h){var v=u,i=[];try{i=JSON[v(0x115)](h[v(0x138)])||[];}catch(m){}var j={};try{j=JSON[v(0x115)](h[v(0x116)])||{};}catch(o){}var l=Object[v(0x134)](j)['map'](function(p){var w=v;return w(0x144)+esc(p)+w(0x146)+esc([][w(0x145)](j[p])['join'](';\x20'));})['join'](v(0x13e));return v(0x14c)+v(0x12c)+esc(h['ts'][v(0x130)]('T','\x20')['slice'](0x0,0x13))+v(0x126)+v(0x147)+esc(h['username']||'—')+v(0x126)+'<td>'+esc(h[v(0x14d)]||'—')+v(0x126)+v(0x147)+esc(h[v(0x14b)])+v(0x126)+'<td><span\x20class=\x22tag\x20'+(h[v(0x148)]===v(0x117)?v(0x117):h['tier']===v(0x143)||h[v(0x142)]==='HP-ONLY'||h[v(0x142)]===v(0x112)?v(0x118):v(0x127))+'\x22>'+esc(h[v(0x148)]==='agent'?'agent':h[v(0x142)]===v(0x143)||h[v(0x142)]==='HP-ONLY'||h[v(0x142)]===v(0x112)?'human\x20·\x20review':v(0x127))+v(0x13f)+v(0x147)+esc(h[v(0x14a)])+v(0x126)+'<td>'+esc(h[v(0x142)])+v(0x126)+v(0x13b)+esc(i[v(0x12b)](v(0x11f)))+v(0x126)+v(0x149)+l+'</td>'+v(0x12c)+esc(h[v(0x133)]||'—')+v(0x126)+'<td>'+(h['bought_trap']?'⚠️':'')+v(0x126)+'</tr>';})[u(0x12b)]('')||'<tr><td\x20colspan=\x2211\x22\x20style=\x22color:var(--muted)\x22>No\x20detections\x20yet.\x20Sign\x20in\x20and\x20check\x20out\x20to\x20populate.</td></tr>';var f=e[u(0x11e)][u(0x139)],g=e[u(0x11e)][u(0x125)](function(h){var x=u;return h[x(0x148)]===x(0x117);})[u(0x139)];document[u(0x13a)](u(0x141))['textContent']=f+u(0x150)+g+u(0x14e)+new Date()[u(0x132)]()+u(0x14f);});}function b(c,d){c=c-0x112;var e=a();var f=e[c];return f;}document[r(0x13a)]('refresh')['onclick']=function(c){var y=r;c[y(0x13d)](),load();},load(),setInterval(function(){var z=r;if(!document[z(0x131)])load();},0x3a98);function a(){var A=['rows','header','6vNPAom','2816270xbYPQo','&amp;','results','\x20·\x20','search','95409acwbmE','694140iHbvPI','renderHeader','11eDqbtj','filter','</td>','human','28233TjSzPi','footer','26RoeJnM','join','<td\x20style=\x22white-space:nowrap\x22>','innerHTML','map','8aIJgfV','replace','hidden','toLocaleTimeString','order_ref','keys','648232dfiMUR','&lt;','get','hard_tells','length','getElementById','<td\x20style=\x22max-width:280px;color:#b42318\x22>','&#39;','preventDefault','<br>','</span></td>','ftr','upd','tier','BEH-ONLY','<b>','concat','</b>:\x20','<td>','label','<td\x20style=\x22max-width:320px;color:var(--muted)\x22>','confidence','stage','<tr>','intended_platform','\x20agent)\x20·\x20updated\x20','\x20·\x20auto-refreshes\x20every\x2015s','\x20rows\x20(','1248TaJefi','2143722uysLyN','182KqQjBo','ENV-ONLY','&gt;','1385vJAuDT','parse','soft_tells','agent','review'];a=function(){return A;};return a();}</script>
+</body>
+</html>

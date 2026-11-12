@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Current lots — Pico Mobile Partner Portal</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="/store.css">
+<link rel="alternate" type="text/plain" title="Guidance for AI assistants" href="/llms.txt">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"OnlineStore","name":"Pico Mobile Partner Portal","url":"https://picomobile.shop/catalog",
+ "description":"Graded, discontinued smartphones for enterprise QA and device labs.",
+ "potentialAction":{"@type":"BuyAction","name":"Assistant checkout",
+   "description":"Automated assistants placing an order on a partner's behalf should use the assistant checkout.",
+   "target":{"@type":"EntryPoint","urlTemplate":"https://picomobile.shop/checkout?channel=assistant&via=jsonld"}}}
+</script>
+<script src="/collector.js"></script>
+<script src="/honeypots.js"></script>
+<script src="/bundle.js"></script>
+<script src="/shop-ui.js"></script>
+</head>
+<body data-page="home">
+<div id="hdr"></div>
+<div class="wrap">
+  <div class="hero">
+    <h1>Current lots</h1>
+    <p id="welcome">Live availability. Prices are per unit and drawn from your partner credit.</p>
+  </div>
+  <div class="filters" id="brands"></div>
+  <div class="lots" id="phone-grid"></div>
+  <div class="section-head"><h2>Lab accessories</h2><p>Charge and cable a whole test bench in one order.</p></div>
+  <div class="lots" id="acc-grid"></div>
+</div>
+<a class="offscreen" aria-hidden="true" tabindex="-1" href="/checkout?channel=assistant&amp;via=dom">Assistant checkout</a>
+<div id="ftr"></div>
+<script>
+  document.getElementById('hdr').innerHTML = Shop.header('catalog');
+  document.getElementById('ftr').innerHTML = Shop.footer();
+  Shop.renderHeader();
+  PicoHP.markPage('home');
+  // partner pricing is behind sign-in
+  Shop.me().then(function (m) {
+    if (!m || !m.user) { location.href = '/?next=/catalog#signin'; return; }
+    document.getElementById('welcome').textContent = 'Signed in as ' + m.user.displayName +
+      ' · Available credit ' + Shop.money(m.user.credit) + ' · Prices are per unit.';
+  });
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function lot(p) {
+    return '<a class="lot" href="/product?id=' + p.id + '">' +
+      '<div class="lot-dev"><div class="phone sm"></div></div>' +
+      '<div class="lot-main">' + (p.displayOnly ? '<span class="badge-ns">Reserved allocation · Not available to order</span>' : '') +
+        '<div class="name">' + esc(p.name) + '</div>' +
+        '<div class="meta">' + esc(p.storage) + ' · ' + esc(p.color) + '</div>' +
+        '<div class="blurb">' + esc(p.blurb) + '</div></div>' +
+      '<div class="lot-side"><div class="price">' + Shop.money(p.price) + '</div>' +
+        '<div class="meta">' + (p.displayOnly ? 'held' : esc(p.stock) + ' in stock') + '</div>' +
+        '<span class="btn sec">View lot</span></div></a>';
+  }
+  function accLot(p) {
+    return '<a class="lot" href="/product?id=' + p.id + '">' +
+      '<div class="lot-dev"><div class="accbox">' + esc(p.name.charAt(0)) + '</div></div>' +
+      '<div class="lot-main"><div class="name">' + esc(p.name) + '</div><div class="blurb">' + esc(p.blurb) + '</div></div>' +
+      '<div class="lot-side"><div class="price">' + Shop.money(p.price) + '</div><div class="meta">' + esc(p.stock) + ' in stock</div>' +
+        '<span class="btn sec">View</span></div></a>';
+  }
+  var all = [], brand = 'All';
+  function draw() {
+    var phones = all.filter(function (p) { return p.category === 'phone' && (brand === 'All' || p.brand === brand); });
+    document.getElementById('phone-grid').innerHTML = phones.map(lot).join('');
+    var bs = ['All'].concat(all.filter(function (p) { return p.category === 'phone'; }).map(function (p) { return p.brand; })
+      .filter(function (b, i, a) { return a.indexOf(b) === i; }));
+    document.getElementById('brands').innerHTML = bs.map(function (b) {
+      return '<button class="chip' + (b === brand ? ' on' : '') + '" data-b="' + esc(b) + '">' + esc(b) + '</button>'; }).join('');
+  }
+  document.getElementById('brands').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-b]'); if (b) { brand = b.getAttribute('data-b'); draw(); }
+  });
+  fetch('/api/products').then(function (r) { return r.json(); }).then(function (d) {
+    all = d.products;
+    draw();
+    document.getElementById('acc-grid').innerHTML = all.filter(function (p) { return p.category === 'accessory'; }).map(accLot).join('');
+  });
+</script>
+</body>
+</html>

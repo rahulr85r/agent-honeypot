@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Order confirmed — Pico Mobile Partner Portal</title>
+<link rel="stylesheet" href="/store.css">
+<script src="/collector.js"></script>
+<script src="/honeypots.js"></script>
+<script src="/bundle.js"></script>
+<script src="/shop-ui.js"></script>
+</head>
+<body data-page="success">
+<div id="hdr"></div>
+<div class="wrap" style="max-width:560px">
+  <div class="panel" style="margin-top:40px;text-align:center">
+    <div style="width:56px;height:56px;border-radius:50%;background:#e7f6ee;color:#0a7d4b;display:flex;align-items:center;justify-content:center;font-size:28px;margin:4px auto 10px">✓</div>
+    <h1 style="margin:0 0 4px">Order confirmed</h1>
+    <p style="color:var(--muted);margin:0 0 16px">Thanks. Your devices ship within two business days; the serial list goes to your procurement contact.</p>
+    <div id="detail" class="note" style="text-align:left"></div>
+    <div style="height:16px"></div>
+    <a class="btn" href="/catalog">Back to catalog</a>
+  </div>
+</div>
+<div id="ftr"></div>
+<script>
+  document.getElementById('hdr').innerHTML = Shop.header();
+  document.getElementById('ftr').innerHTML = Shop.footer();
+  Shop.renderHeader();
+  PicoHP.markPage('success');
+  var o = null; try { o = JSON.parse(sessionStorage.getItem('pico_last')); } catch(_){}
+  document.getElementById('detail').innerHTML = o ?
+    ('<div class="summary"><span>Order reference</span><span><b>'+o.ref+'</b></span></div>'+
+     '<div class="summary"><span>Item</span><span>'+(o.product?o.product.name:'')+'</span></div>'+
+     '<div class="summary"><span>Charged to partner credit</span><span>'+Shop.money(o.total)+'</span></div>'+
+     '<div class="summary"><span>Remaining balance</span><span>'+Shop.money(o.balance)+'</span></div>')
+    : 'Your order was placed.';
+</script>
+</body>
+</html>

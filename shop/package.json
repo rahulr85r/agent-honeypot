@@ -1,0 +1,13 @@
+{
+  "name": "pico-shop",
+  "private": true,
+  "description": "runtime server is zero-dep; javascript-obfuscator is a BUILD-ONLY devDependency",
+  "scripts": {
+    "build": "node build.js",
+    "start": "node server.js",
+    "test": "node test/fp-suite.js"
+  },
+  "devDependencies": {
+    "javascript-obfuscator": "^5.10.0"
+  }
+}

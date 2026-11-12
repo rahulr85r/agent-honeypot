@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Detection log</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#14171c;--muted:#667085;--line:#e4e7ec;--chip:#f2f4f7;
+  --agent:#b42318;--agentbg:#fef3f2;--human:#067647;--humanbg:#ecfdf3;--review:#b54708;--reviewbg:#fffaeb;--brand:#1652f0}
+@media (prefers-color-scheme: dark){:root{--bg:#0f1115;--card:#171a21;--ink:#e6e8ec;--muted:#98a2b3;--line:#2a2f3a;--chip:#222733;
+  --agent:#ff8a80;--agentbg:#3a1714;--human:#6ce9a6;--humanbg:#0f2a1e;--review:#fdb022;--reviewbg:#33260b;--brand:#7aa2ff}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:16px}
+h1{font-size:20px;margin:4px 0 2px}
+.muted{color:var(--muted)} .small{font-size:12px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:12px}
+button,.chipbtn{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer}
+.chipbtn.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+input[type=search]{font:inherit;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink);min-width:0;flex:1 1 160px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:12px 0}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.tile b{display:block;font-size:22px} .tile span{font-size:12px;color:var(--muted)}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:10px;overflow:hidden}
+.sess>summary{list-style:none;cursor:pointer;padding:12px 14px}
+.sess>summary::-webkit-details-marker{display:none}
+.tagrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;padding:10px 14px 0;font-size:13px}
+.tagrow label{font-weight:600}
+.tagrow input{font:inherit;padding:5px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);flex:0 1 240px;min-width:0}
+.tagrow input:focus{outline:2px solid var(--brand);outline-offset:0;border-color:transparent}
+.tagrow .st{font-size:12px;color:var(--muted)}
+.top{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+.acct{font-weight:700;font-size:15px}
+.badge{display:inline-block;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:600}
+.agent{background:var(--agentbg);color:var(--agent)} .human{background:var(--humanbg);color:var(--human)} .review{background:var(--reviewbg);color:var(--review)}
+.flag{background:var(--agent);color:#fff} .flag.miss{background:var(--review)}
+.chip{display:inline-block;background:var(--chip);border-radius:6px;padding:1px 7px;font-size:12px;margin:2px 4px 2px 0}
+.chip.hit{background:var(--agentbg);color:var(--agent);font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin-top:10px}
+.cell{border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.cell h4{margin:0 0 4px;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.body{border-top:1px solid var(--line);padding:10px 14px 14px}
+.ev{border-left:3px solid var(--line);padding:6px 0 6px 10px;margin:8px 0}
+.ev.agent{border-left-color:var(--agent);background:none;color:inherit} .ev.review{border-left-color:var(--review);background:none;color:inherit} .ev.human{border-left-color:var(--human);background:none;color:inherit}
+.ev ul{margin:4px 0 0;padding-left:18px} .ev li{margin:2px 0}
+.hardli{color:var(--agent)}
+pre{background:var(--chip);border-radius:8px;padding:10px;overflow:auto;font-size:11.5px;max-height:420px;white-space:pre-wrap;word-break:break-word}
+details.sec{margin:6px 0} details.sec>summary{cursor:pointer;font-weight:600}
+.empty{padding:30px;text-align:center;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap" id="loginbox" hidden>
+  <div class="card" style="max-width:360px;margin:12vh auto 0;padding:20px">
+    <h1 style="margin:0 0 4px">Detection log</h1>
+    <div class="muted small" style="margin-bottom:14px">Sign in to view</div>
+    <form id="lf">
+      <input id="lu" autocomplete="username" placeholder="Username" style="width:100%;margin-bottom:8px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit">
+      <input id="lp" type="password" autocomplete="current-password" placeholder="Password" style="width:100%;margin-bottom:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit">
+      <button type="submit" id="lgo" style="width:100%;border-radius:10px;background:var(--ink);color:var(--bg);border-color:var(--ink)">Sign in</button>
+      <div id="lerr" class="small" style="color:var(--agent);margin-top:8px"></div>
+    </form>
+  </div>
+</div>
+<div class="wrap" id="app" hidden>
+  <div class="bar">
+    <div><h1>Detection log</h1><div class="muted small" id="upd">loading…</div></div>
+    <div style="display:flex;gap:6px"><button id="ref">Refresh</button><button id="out">Sign out</button></div>
+  </div>
+  <div class="tiles" id="tiles"></div>
+  <div class="filters" id="filters"></div>
+  <div class="bar"><input type="search" id="q" placeholder="Filter by account or agent (e.g. jb, tony_a, Muse)"></div>
+  <div id="list"></div>
+  <datalist id="agentnames"><option value="ChatGPT agent"><option value="ChatGPT Atlas"><option value="Muse"><option value="Hark"><option value="Dots"><option value="Grok">
+    <option value="Instinct"><option value="Claude"><option value="Perplexity"><option value="Perplexity Comet"><option value="Gemini"><option value="Manus"><option value="Human (me)"></datalist>
+</div>
+<script>
+(function () {
+  var KEY = (location.pathname.match(/^\/v\/([a-f0-9]+)/) || [])[1] || '';
+  var API = '/api/v/' + KEY;
+  var REVIEW = { 'BEH-ONLY': 1, 'HP-ONLY': 1, 'ENV-ONLY': 1 };
+  var state = { rows: [], tags: {}, filter: 'all', q: '', open: {} };
+  function esc(s) { return (s == null ? '' : String(s)).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function kind(r) { return r.label === 'agent' ? 'agent' : (REVIEW[r.tier] ? 'review' : 'human'); }
+  function word(k) { return k === 'agent' ? 'Agent' : k === 'review' ? 'Review' : ''; }   // no label at all when not flagged
+  function t(ts) { var d = new Date(ts); return d.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }); }
+  function stageName(s) { return s === 'login' ? 'Sign-in' : s === 'login_fail' ? 'Failed sign-in' : s === 'checkout' ? 'Order'
+    : s === 'contact' ? 'Contact form' : s === 'locator' ? 'Store search' : /^canary:/.test(s) ? 'Followed assistant link (' + s.slice(7) + ')' : s; }
+
+  function sessions() {
+    var by = {};
+    state.rows.forEach(function (r) { (by[r.sid || ('row' + r.id)] = by[r.sid || ('row' + r.id)] || []).push(r); });
+    return Object.keys(by).map(function (sid) {
+      var rs = by[sid].slice().sort(function (a, b) { return a.id - b.id; });
+      var who = rs.filter(function (r) { return r.username; })[0] || {};
+      var ks = rs.map(kind);
+      var overall = ks.indexOf('agent') >= 0 ? 'agent' : ks.indexOf('review') >= 0 ? 'review' : 'human';
+      var signins = rs.filter(function (r) { return r.stage === 'login' || r.stage === 'login_fail'; });
+      var lastSignin = signins[signins.length - 1] || null;
+      var order = rs.filter(function (r) { return r.stage === 'checkout'; }).slice(-1)[0] || null;
+      var dev = (rs.filter(function (r) { return r.device && r.hasBundle; })[0] || rs.filter(function (r) { return r.device; })[0] || {}).device || null;
+      // honeypots split by journey step: sign-in vs order (contact / locator / other go to "other")
+      var hp = { signin: {}, order: {}, other: {} }, strong = null, named = null, ticked = false;
+      var SIGNIN_VIA = /^(name-|strong$|error$|gate$|button$)/;
+      function put(page, label) { (hp[page] || hp.other)[label] = 1; }
+      function linkPage(via, page) { return page || (SIGNIN_VIA.test(via) ? 'signin' : via === 'visible' ? 'order' : 'other'); }
+      rs.forEach(function (r) {
+        if (/^canary:/.test(r.stage)) { var v0 = r.stage.slice(7); put(linkPage(v0, r.page), 'link: ' + v0); }
+        var h = r.honeypots; if (!h) return;
+        (h.linksFollowed || []).forEach(function (l) { var v = typeof l === 'string' ? l : l.via; put(linkPage(v, l.page), 'link: ' + v); });
+        var stepPage = r.stage === 'checkout' ? 'order' : /^login/.test(r.stage) ? 'signin' : 'other';
+        if (h.decoyFilled) put(stepPage, 'decoy field');
+        if (h.contentCanary) put('other', 'reference code');
+        if (h.hiddenOption) put('other', 'hidden option');
+        if (r.bought_trap) put('order', 'bought the reserved lot');
+        if (h.declare && h.declare.checked) { ticked = true; put(h.declare.page === 'checkout' ? 'order' : stepPage, 'ticked AI box' + (h.declare.visible ? '' : ' (hidden)')); }
+        if (h.declare && h.declare.name && !h.declare.name.autofill) named = h.declare.name.value;
+        if (h.strongShownFor) strong = h.strongShownFor + (h.gateShown ? ' · sign-in gate shown' : '');
+      });
+      var intended = who.intended || (who.username && /_a$/.test(who.username) ? 'agent' : who.username && /_h$/.test(who.username) ? 'human' : null);
+      var signinAgent = signins.some(function (r) { return r.label === 'agent'; }) || rs.some(function (r) { return /^canary:/.test(r.stage) && r.id < (lastSignin ? lastSignin.id : 0); });
+      var flag = null;
+      if (intended === 'human' && overall === 'agent') flag = 'fp';
+      return { sid: sid, rows: rs, user: who.username || '(no sign-in)', intended: intended, overall: overall, signin: lastSignin,
+               fails: signins.filter(function (r) { return r.stage === 'login_fail'; }).length, order: order, dev: dev,
+               hpSignin: Object.keys(hp.signin), hpOrder: Object.keys(hp.order), hpOther: Object.keys(hp.other),
+               hits: Object.keys(hp.signin).concat(Object.keys(hp.order), Object.keys(hp.other)), strong: strong, named: named, flag: flag, first: rs[0].ts, last: rs[rs.length - 1].ts };
+    }).sort(function (a, b) { return a.last < b.last ? 1 : -1; });
+  }
+
+  function renderTiles(ss) {
+    var c = { all: ss.length, agent: 0, human: 0, review: 0, fp: 0, hps: 0, hpo: 0 };
+    ss.forEach(function (s) { c[s.overall]++; if (s.flag) c[s.flag]++; if (s.hpSignin.length) c.hps++; if (s.hpOrder.length) c.hpo++; });
+    document.getElementById('tiles').innerHTML =
+      [['Sessions', c.all], ['Agent detected', c.agent], ['Fell for sign-in honeypot', c.hps], ['Fell for order honeypot', c.hpo], ['Review', c.review], ['Human flagged as agent', c.fp]]
+        .map(function (x) { return '<div class="tile"><b>' + x[1] + '</b><span>' + x[0] + '</span></div>'; }).join('');
+    var F = [['all', 'All'], ['agent', 'Agent'], ['review', 'Review'], ['flags', 'Needs a look']];
+    document.getElementById('filters').innerHTML = F.map(function (f) {
+      return '<button class="chipbtn' + (state.filter === f[0] ? ' on' : '') + '" data-f="' + f[0] + '">' + f[1] + '</button>'; }).join('');
+  }
+
+  function verdictLine(r) {
+    if (!r) return '<span class="muted">—</span>';
+    var k = kind(r);
+    if (k === 'human') return '<span class="muted">—</span>';
+    return '<span class="badge ' + k + '">' + word(k) + ' ' + esc(r.confidence) + '%</span> <span class="muted small">' + esc(r.tier) + '</span>';
+  }
+
+  function renderSession(s) {
+    var ord = s.order ? esc(s.order.order_ref || '') + ' · ' + esc(s.order.product || '') + (s.order.bought_trap ? ' · <b>bought trap unit</b>' : '') + '<br>' + verdictLine(s.order) : '<span class="muted">no order</span>';
+    var sign = s.signin ? verdictLine(s.signin) + (s.fails ? ' <span class="muted small">(' + s.fails + ' failed attempt' + (s.fails > 1 ? 's' : '') + ')</span>' : '') : '<span class="muted">no sign-in</span>';
+    var dev = s.dev ? esc(s.dev.browser) + '<br><span class="muted small">' + esc(s.dev.gpu) + (s.dev.arch ? ' · ' + esc(s.dev.arch) : '') +
+      (s.dev.screen ? ' · ' + esc(s.dev.screen) : '') + (s.dev.touch ? ' · touch' : '') + (s.dev.tz ? ' · ' + esc(s.dev.tz) : '') + '</span>' : '<span class="muted">—</span>';
+    function chips(list) { return list.length ? list.map(function (h) { return '<span class="chip hit">' + esc(h) + '</span>'; }).join('') : '<span class="muted">none</span>'; }
+    var hpS = chips(s.hpSignin) + (s.named ? '<div class="small">said it is: <b>' + esc(s.named) + '</b></div>' : '') +
+      (s.strong ? '<div class="small muted">strong notice shown (' + esc(s.strong) + ')</div>' : '');
+    var hpO = chips(s.hpOrder) + (s.hpOther.length ? '<div class="small muted" style="margin-top:4px">other pages: ' + s.hpOther.map(esc).join(', ') + '</div>' : '');
+    var flag = s.flag === 'fp' ? '<span class="badge flag">Human flagged as agent</span>' : '';
+    var open = state.open[s.sid] ? ' open' : '';
+    var tag = state.tags[s.sid] || '';
+    return '<div class="card"><div class="tagrow"><label for="tag-' + esc(s.sid) + '">Agent used</label>' +
+      '<input id="tag-' + esc(s.sid) + '" data-tag="' + esc(s.sid) + '" list="agentnames" maxlength="60" autocomplete="off" placeholder="type which agent ran this test (or Human)" value="' + esc(tag) + '">' +
+      '<span class="st" id="st-' + esc(s.sid) + '">' + (tag ? 'saved' : '') + '</span></div>' +
+      '<details class="sess" data-sid="' + esc(s.sid) + '"' + open + '><summary>' +
+      '<div class="top"><span class="acct">' + esc(s.user) + '</span>' +
+      (s.overall !== 'human' ? '<span class="badge ' + s.overall + '">' + word(s.overall) + '</span>' : '') + flag +
+      '<span class="muted small" style="margin-left:auto">' + esc(t(s.first)) + '</span></div>' +
+      '<div class="grid">' +
+        '<div class="cell"><h4>Sign-in</h4>' + sign + '<h4 style="margin-top:10px">Sign-in honeypots</h4>' + hpS + '</div>' +
+        '<div class="cell"><h4>Order</h4>' + ord + '<h4 style="margin-top:10px">Order honeypots</h4>' + hpO + '</div>' +
+        '<div class="cell"><h4>Device</h4>' + dev + '</div>' +
+      '</div></summary><div class="body">' + s.rows.map(renderEvent).join('') + '</div></details></div>';
+  }
+
+  function renderEvent(r) {
+    var k = kind(r), soft = r.soft || {};
+    var softList = Object.keys(soft).map(function (f) { return '<li><b>' + esc(f) + '</b>: ' + esc([].concat(soft[f]).join('; ')) + '</li>'; }).join('');
+    var hardList = (r.hard || []).map(function (h) { return '<li class="hardli">' + esc(h) + '</li>'; }).join('');
+    var b = r.behaviour;
+    var behLine = b ? '<div class="small muted">' + 'session ' + esc(b.sessionS) + 's · first action ' + esc(b.firstActionS) + 's · ' + esc(b.clicks) + ' clicks · ' +
+      esc(b.mouseMoves) + ' mouse moves · ' + esc(b.keys) + ' keys' + (b.untrustedKeys ? ' (' + esc(b.untrustedKeys) + ' synthetic)' : '') + '</div>' : '';
+    var q = r.request;
+    var reqLine = q ? '<div class="small muted">' + (q.fetchMode === 'navigate' ? 'opened as a page' + (q.fetchUser === '?1' ? ' (user-activated click)' : ' (no click — scripted navigation)')
+        : q.fetchMode ? '<b style="color:var(--agent)">fetched by a script</b> (' + esc(q.fetchMode) + '/' + esc(q.fetchDest) + ')' : 'no browser fetch metadata (non-browser client?)') +
+      (q.from ? ' · from ' + esc(q.from) : '') + '<br>' + esc(q.ua || '(no user-agent)') + '</div>' : '';
+    return '<div class="ev ' + k + '"><div><b>' + esc(stageName(r.stage)) + '</b> · <span class="muted small">' + esc(t(r.ts)) + '</span> · ' + verdictLine(r) + '</div>' +
+      reqLine + behLine + (hardList ? '<ul>' + hardList + '</ul>' : '') + (softList ? '<ul class="small">' + softList + '</ul>' : '') +
+      (r.hasBundle ? '<div style="margin-top:6px"><button class="small" data-full="' + r.id + '">Full signals</button><div id="full' + r.id + '"></div></div>' : '') + '</div>';
+  }
+
+  function render() {
+    var ss = sessions();
+    renderTiles(ss);
+    var q = state.q.trim().toLowerCase();
+    var shown = ss.filter(function (s) {
+      if (q && s.user.toLowerCase().indexOf(q) < 0 && String(state.tags[s.sid] || '').toLowerCase().indexOf(q) < 0) return false;
+      if (state.filter === 'flags') return !!s.flag || s.overall === 'review';
+      return state.filter === 'all' || s.overall === state.filter;
+    });
+    document.getElementById('list').innerHTML = shown.length ? shown.map(renderSession).join('')
+      : '<div class="empty">' + (state.rows.length ? 'Nothing matches this filter.' : 'No activity yet. Rows appear here as soon as someone signs in, orders, or submits a form.') + '</div>';
+  }
+
+  // ---- per-session "Agent used" label (saved on blur / Enter, and 1s after typing stops) ----
+  var dirty = {}, timers = {};
+  function editingTag() { var a = document.activeElement; return !!(a && a.hasAttribute && a.hasAttribute('data-tag')); }
+  function stEl(sid) { return document.getElementById('st-' + sid); }
+  function saveTag(sid, val) {
+    clearTimeout(timers[sid]);
+    val = String(val || '').trim();
+    if ((state.tags[sid] || '') === val && !(sid in dirty)) return;
+    dirty[sid] = val; state.tags[sid] = val;
+    var st = stEl(sid); if (st) st.textContent = 'saving…';
+    fetch(API + '/tag', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sid: sid, agent: val }) })
+      .then(function (r) {
+        if (r.status === 401) { showLogin('Session expired — sign in again.'); throw 'auth'; }
+        if (!r.ok) throw 'bad';
+        if (dirty[sid] === val) delete dirty[sid];
+        var st = stEl(sid); if (st) st.textContent = val ? 'saved' : 'cleared';
+        if (!editingTag() && state.q) render();
+      })
+      .catch(function (e) {
+        if (e === 'auth') return;
+        var st = stEl(sid);
+        if (e === 'bad') { delete dirty[sid]; if (st) st.textContent = 'not saved'; return; }
+        if (st) st.textContent = 'not saved — retrying';   // network blip: try again shortly
+        timers[sid] = setTimeout(function () { saveTag(sid, val); }, 5000);
+      });
+  }
+  document.addEventListener('input', function (e) {
+    var el = e.target; if (!el.hasAttribute || !el.hasAttribute('data-tag')) return;
+    var sid = el.getAttribute('data-tag'); var st = stEl(sid); if (st) st.textContent = 'typing…';
+    clearTimeout(timers[sid]); timers[sid] = setTimeout(function () { saveTag(sid, el.value); }, 1000);
+  });
+  document.addEventListener('change', function (e) { var el = e.target; if (el.hasAttribute && el.hasAttribute('data-tag')) saveTag(el.getAttribute('data-tag'), el.value); });
+  document.addEventListener('keydown', function (e) {
+    var el = e.target; if (e.key === 'Enter' && el.hasAttribute && el.hasAttribute('data-tag')) { e.preventDefault(); el.blur(); }
+  });
+
+  var authed = false;
+  function showLogin(msg) {
+    authed = false;
+    document.getElementById('app').hidden = true; document.getElementById('loginbox').hidden = false;
+    document.getElementById('lerr').textContent = msg || '';
+    setTimeout(function () { document.getElementById('lu').focus(); }, 50);
+  }
+  function load() {
+    fetch(API + '/rows', { cache: 'no-store', credentials: 'same-origin' }).then(function (r) {
+      if (r.status === 401) { showLogin(); throw 'auth'; }
+      return r.json();
+    }).then(function (d) {
+      authed = true;
+      document.getElementById('loginbox').hidden = true; document.getElementById('app').hidden = false;
+      state.rows = d.rows || [];
+      var serverTags = d.tags || {};
+      Object.keys(dirty).forEach(function (k) { serverTags[k] = dirty[k]; });   // keep edits still being saved
+      state.tags = serverTags;
+      document.getElementById('upd').textContent = state.rows.length + ' events · updated ' + new Date().toLocaleTimeString() + ' · refreshes every 20s';
+      if (!editingTag()) render();   // don't redraw under someone who is typing a label
+    }).catch(function (e) { if (e !== 'auth') document.getElementById('upd').textContent = 'could not load — retrying'; });
+  }
+  document.getElementById('lf').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var btn = document.getElementById('lgo'); btn.disabled = true; document.getElementById('lerr').textContent = '';
+    fetch(API + '/login', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: document.getElementById('lu').value, password: document.getElementById('lp').value }) })
+      .then(function (r) { btn.disabled = false; document.getElementById('lp').value = '';
+        if (r.ok) load(); else document.getElementById('lerr').textContent = 'Wrong username or password.'; })
+      .catch(function () { btn.disabled = false; document.getElementById('lerr').textContent = 'Network error — try again.'; });
+  });
+  document.getElementById('out').addEventListener('click', function () {
+    fetch(API + '/logout', { method: 'POST', credentials: 'same-origin' }).then(function () { state.rows = []; showLogin('Signed out.'); });
+  });
+
+  document.addEventListener('click', function (e) {
+    var f = e.target.closest('[data-f]');
+    if (f) { state.filter = f.getAttribute('data-f'); render(); return; }
+    var full = e.target.closest('[data-full]');
+    if (full) {
+      e.preventDefault(); var id = full.getAttribute('data-full'), box = document.getElementById('full' + id);
+      if (box.innerHTML) { box.innerHTML = ''; return; }
+      box.innerHTML = '<div class="muted small">loading…</div>';
+      fetch(API + '/row/' + id, { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) {
+        var b = d.bundle || {}, C = b.collector || {};
+        var secs = [['Device & browser (static fingerprint)', C.static], ['Environment', C.env], ['Behaviour (mouse, keys, fields, clicks)', C.behaviour],
+                    ['Honeypots (page)', b.hp], ['Server-side (links followed, typed lengths, traps)', b.server], ['Scoring reasons', d.reasons]];
+        box.innerHTML = secs.map(function (s) {
+          if (s[1] == null) return '';
+          return '<details class="sec"><summary>' + esc(s[0]) + '</summary><pre>' + esc(typeof s[1] === 'string' ? s[1] : JSON.stringify(s[1], null, 2)) + '</pre></details>';
+        }).join('');
+      }).catch(function () { box.innerHTML = '<div class="muted small">could not load</div>'; });
+    }
+  });
+  // remember which sessions are expanded across auto-refreshes
+  document.addEventListener('toggle', function (e) {
+    var el = e.target; if (el.classList && el.classList.contains('sess')) state.open[el.getAttribute('data-sid')] = el.open;
+  }, true);
+  document.getElementById('q').addEventListener('input', function (e) { state.q = e.target.value; render(); });
+  document.getElementById('ref').addEventListener('click', load);
+  load();
+  // auto-refresh, paused while a full-signal panel is open so it doesn't collapse under you
+  setInterval(function () { if (authed && !document.hidden && !document.querySelector('[id^="full"] pre')) load(); }, 20000);
+})();
+</script>
+</body>
+</html>
